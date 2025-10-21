@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+
 @Entity
 @Table(name = "person")
 public class Person {
@@ -22,6 +23,9 @@ public class Person {
 
     @Column(name = "age")
     int age;
+
+    @OneToMany(mappedBy = "person")
+    Passport passport;
 
     @Override
     public String toString() {

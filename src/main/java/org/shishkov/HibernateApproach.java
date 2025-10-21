@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.shishkov.entities.Passport;
 import org.shishkov.entities.Person;
 
 import java.util.List;
@@ -20,6 +21,16 @@ public class HibernateApproach {
         List<Person> persons = session.createNativeQuery("SELECT * FROM person", Person.class).getResultList();
         persons.forEach(System.out::println);
         session.close();
+
+//      Раскомментировать для демонстрации решения проблемы N+1
+//      solve_N_Plus_One_Problem();
+    }
+
+    public static void solve_N_Plus_One_Problem() {
+        Session session = sessionFactory.openSession();
+        List<Person> persons = session.createQuery("SELECT p FROM Person p join fetch p.passport", Person.class).getResultList();
+        persons.forEach(System.out::println);
+        session.close();
     }
 
     // В Spring Boot конфигурируется проще. Данный вариант устаревший, но наглядный.
@@ -34,12 +45,12 @@ public class HibernateApproach {
         settings.put(Environment.USER, dbUsername);
         settings.put(Environment.PASS, dbPassword);
         settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
-        settings.put(Environment.SHOW_SQL, "false");
+        settings.put(Environment.SHOW_SQL, "true");
         settings.put(Environment.FORMAT_SQL, "false");
         settings.put(Environment.HBM2DDL_AUTO, "update");
 
         configuration.setProperties(settings);
-        configuration.addAnnotatedClass(Person.class);
+        configuration.addAnnotatedClass(Person.class).addAnnotatedClass(Passport.class);
         return configuration.buildSessionFactory();
     }
 }
