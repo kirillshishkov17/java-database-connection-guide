@@ -22,8 +22,8 @@ public class HibernateApproach {
         session.close();
     }
 
-    // в Spring Boot конфигурируется проще
-    // если добавить зависимость Spring JPA, то Bean для SessionFactory создастся автоматически
+    // В Spring Boot конфигурируется проще. Данный вариант устаревший, но наглядный.
+    // Если добавить зависимость Spring JPA, то Bean для SessionFactory создастся автоматически
     @SuppressWarnings("deprecation")
     public static SessionFactory initializeHibernate() {
         Configuration configuration = new Configuration();
